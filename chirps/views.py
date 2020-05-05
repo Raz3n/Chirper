@@ -13,5 +13,10 @@ def chirp_detail_view(request, chirp_id, *args, **kwargs):
         obj = Chirp.objects.get(id=chirp_id)
     except:
         raise Http404
-    return HttpResponse(f'<h1>Hello {chirp_id} - {obj.content} <h1>')
-    
+    data = {
+        "id": chirp_id,
+        "content": obj.content,
+        #"image_path": obj.image.ul
+        
+    }
+    return JsonResponse(data)
