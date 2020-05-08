@@ -11,6 +11,7 @@ def chirp_list_view(request, *args, **kwargs):
     qs = Chirp.objects.all()
     chirps_list = [{"id": x.id, "content": x.content} for x in qs]
     data = {
+        "isUser": False,
         "response": chirps_list
     }
     return JsonResponse(data)
