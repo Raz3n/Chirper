@@ -7,6 +7,13 @@ from .models import Chirp
 def home_view(request, *args, **kwargs):
     return render(request, "pages/home.html", context={}, status=200)
 
+def chirp_list_view(request, *args, **kwargs):
+    qs = Chirp.objects.all()
+    chirps_list = [{"id": x.id, "content": x.content} for x in qs]
+    data = {
+        "response": chirps_list
+    }
+    return JsonResponse(data)
 
 def chirp_detail_view(request, chirp_id, *args, **kwargs):
     data = {
