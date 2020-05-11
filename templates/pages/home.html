@@ -19,8 +19,20 @@ Welcome to Chirper.
   const url = "/chirps";
   const responseType = "json";
 
+  handleDidLike = (chirp_id, currentCount) => {
+
+  }
+
+  LikeBtn = (chirp) => {
+    return "<button class=' btn btn-primary' onclick=handleDidLike(" + 
+    chirp.id + ", " + chirp.likes + ")>Like</button>"
+  }
+
   formatChirpElement = (chirp) => {
-    let formattedChirp = "<h1>" + chirp.id + "<div class='mb-4'></h1>" + "<p>" + chirp.content + "</p></div>"
+    let formattedChirp = "<div class='mb-4' id='chirp-" + chirp.id 
+    + "'><p>" + chirp.content + 
+      "</p><div class='btn-group'>" + LikeBtn(chirp) +
+      "</div></div>"
     return formattedChirp
   }
 
