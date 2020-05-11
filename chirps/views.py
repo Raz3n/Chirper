@@ -1,10 +1,14 @@
 import random
 
+from django.conf import settings
 from django.http import HttpResponse, Http404, JsonResponse
 from django.shortcuts import render, redirect
+from django.utils.http import is_safe_url
 
 from .models import Chirp
 from .forms import ChirpForm
+
+ALLOWED_HOSTS = settings.ALLOWED_HOSTS
 
 # Create your views here.
 def home_view(request, *args, **kwargs):
@@ -16,7 +20,9 @@ def chirp_create_view(request, *args, **kwargs):
     if form.is_valid():
         obj = form.save(commit=False)
         obj.save()
-        if next_url != None:
+        if request.is_ajax():
+            return JsonResponse({}, status=201) #201 for created item
+        if next_url != None and is_safe_url(next_url, ALLOWED_HOSTS):
             return redirect(next_url)
         form = ChirpForm()
     return render(request, 'components/form.html', context={"form": form})

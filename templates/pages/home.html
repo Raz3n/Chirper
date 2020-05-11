@@ -7,7 +7,7 @@
 
 <div class="row mb-3">
   <div class="col-md-4 mx-auto col-10">
-    <form class="form" method="POST" action="/create-chirp">
+    <form class="form" id='chirp-create-form' method="POST" action="/create-chirp">
       {% csrf_token %}
       <input type="hidden" value="/" name="next" />
       <textarea
@@ -25,12 +25,55 @@
 </div>
 
 <script>
-  const chirpsElement = document.getElementById("chirps"); //get html element
 
-  const xhr = new XMLHttpRequest();
-  const method = "GET";
-  const url = "/chirps";
-  const responseType = "json";
+  handleChirpCreateFormDidSubmit = (event) => {
+    event.preventDefault()
+    const myForm = event.target
+    const myFormData = new FormData(myForm)
+    const url = myForm.getAttribute('action')
+    const method = myForm.getAttribute('method')
+    const xhr = new XMLHttpRequest()
+    xhr.open(method, url)
+    xhr.setRequestHeader("HTTP_X_REQUESTED_WITH", "XMLHttpRequest")
+    xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
+    xhr.onload = () => {
+      const serverResponse = xhr.response;
+      console.log(xhr.status, serverResponse)
+      const chirpsEl = document.getElementById("chirps");
+      loadChirps(chirpsEl)
+    }
+  xhr.send(myFormData)
+}
+
+  const chirpCreateFormEl = document.getElementById("chirp-create-form")
+  chirpCreateFormEl.addEventListener("submit", handleChirpCreateFormDidSubmit)
+
+  const chirpsEl = document.getElementById("chirps"); //get html element
+
+  const loadChirps = (chirpsElement) => {
+    const xhr = new XMLHttpRequest()
+    const method = "GET"
+    const url = "/chirps"
+    const responseType = "json"
+    xhr.responseType = responseType;
+    xhr.open(method, url)
+    xhr.onload = () => {
+      const serverResponse = xhr.response;
+      const listedItems = serverResponse.response; //array
+      let finalChirpStr = "";
+      let i;
+      for (i = 0; i < listedItems.length; i++) {
+        let chirpObj = listedItems[i];
+        let currentItem = formatChirpElement(chirpObj);
+        finalChirpStr += currentItem;
+    }
+    chirpsElement.innerHTML = finalChirpStr;
+  }
+  xhr.send()
+}
+
+loadChirps(chirpsEl)
+
 
   handleDidLike = (chirp_id, currentCount) => {
     console.log(chirp_id, currentCount);
@@ -60,21 +103,7 @@
     return formattedChirp;
   };
 
-  xhr.responseType = responseType;
-  xhr.open(method, url);
-  xhr.onload = () => {
-    const serverResponse = xhr.response;
-    const listedItems = xhr.response.response; //array
-    let finalChirpStr = "";
-    let i;
-    for (i = 0; i < listedItems.length; i++) {
-      let chirpObj = listedItems[i];
-      let currentItem = formatChirpElement(chirpObj);
-      finalChirpStr += currentItem;
-    }
-    chirpsElement.innerHTML = finalChirpStr;
-  };
-  xhr.send();
+  
 </script>
 
 {% endblock content %}
