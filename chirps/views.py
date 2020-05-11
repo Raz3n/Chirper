@@ -10,6 +10,15 @@ from .forms import ChirpForm
 def home_view(request, *args, **kwargs):
     return render(request, "pages/home.html", context={}, status=200)
 
+def chirp_create_view(request, *args, **kwargs):
+    form = ChirpForm(request.POST or None)
+    if form.is_valid():
+        obj = form.save(commit=False)
+        obj.save()
+        form = ChirpForm()
+    return render(request, 'components/form.html', context={"form": form})
+
+
 def chirp_list_view(request, *args, **kwargs):
     qs = Chirp.objects.all()
     chirps_list = [{"id": x.id, "content": x.content, "likes": random.randint(0, 999) } for x in qs]
