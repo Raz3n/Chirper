@@ -20,12 +20,12 @@ Welcome to Chirper.
   const responseType = "json";
 
   handleDidLike = (chirp_id, currentCount) => {
-
+    console.log(chirp_id, currentCount)
   }
 
   LikeBtn = (chirp) => {
-    return "<button class=' btn btn-primary' onclick=handleDidLike(" + 
-    chirp.id + ", " + chirp.likes + ")>Like</button>"
+    return "<button class=' btn btn-primary btn-sm' onclick=handleDidLike(" + 
+    chirp.id + "," + chirp.likes + ")>" + chirp.likes + " Likes</button>"
   }
 
   formatChirpElement = (chirp) => {
