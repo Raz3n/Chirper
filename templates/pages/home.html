@@ -15,9 +15,14 @@ Welcome to Chirper.
 
 
   const xhr = new XMLHttpRequest();
-  const method = "GET"; // "POST"
+  const method = "GET";
   const url = "/chirps";
   const responseType = "json";
+
+  formatChirpElement = (chirp) => {
+    let formattedChirp = "<h1>" + chirp.id + "<div class='mb-4'></h1>" + "<p>" + chirp.content + "</p></div>"
+    return formattedChirp
+  }
 
   xhr.responseType = responseType;
   xhr.open(method, url);
@@ -27,8 +32,11 @@ Welcome to Chirper.
     let finalChirpStr = ""
     let i;
     for (i=0; i < listedItems.length; i++) {
-        console.log(i)
+        let chirpObj = listedItems[i]
+        let currentItem = formatChirpElement(chirpObj)
+        finalChirpStr += currentItem 
     }
+    chirpsElement.innerHTML = finalChirpStr
   };
   xhr.send();
 </script>
