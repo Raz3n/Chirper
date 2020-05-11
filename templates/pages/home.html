@@ -1,22 +1,31 @@
-{% extends 'base.html' %}
-
-{% block head_title %} Chirper {% endblock head_title%}
-
-{% block content %}
-<div class='row text-center'>
-  <div class='col'>
+{% extends 'base.html' %} {% block head_title %} Chirper {% endblock head_title%} {% block content %}
+<div class="row text-center">
+  <div class="col">
     <h1>Welcome to Chirper</h1>
   </div>
 </div>
 
+<div class="row mb-3">
+  <div class="col-md-4 mx-auto col-10">
+    <form class="form" method="POST" action="/create-chirp">
+      {% csrf_token %}
+      <input type="hidden" value="/" name="next" />
+      <textarea
+        class="form-control"
+        name="content"
+        placeholder="Your tweet..."
+      ></textarea>
+      <button type="submit" class="btn btn-primary">Chirp</button>
+    </form>
+  </div>
+</div>
 
-<div class='row' id='chirps'>
-    Loading
+<div class="row" id="chirps">
+  Loading
 </div>
 
 <script>
-  const chirpsElement = document.getElementById("chirps") //get html element
-
+  const chirpsElement = document.getElementById("chirps"); //get html element
 
   const xhr = new XMLHttpRequest();
   const method = "GET";
@@ -24,35 +33,46 @@
   const responseType = "json";
 
   handleDidLike = (chirp_id, currentCount) => {
-    console.log(chirp_id, currentCount)
-  }
+    console.log(chirp_id, currentCount);
+  };
 
   LikeBtn = (chirp) => {
-    return "<button class='btn btn-primary btn-sm' onclick=handleDidLike(" + 
-    chirp.id + "," + chirp.likes + ")>" + chirp.likes + " Likes</button>"
-  }
+    return (
+      "<button class='btn btn-primary btn-sm' onclick=handleDidLike(" +
+      chirp.id +
+      "," +
+      chirp.likes +
+      ")>" +
+      chirp.likes +
+      " Likes</button>"
+    );
+  };
 
   formatChirpElement = (chirp) => {
-    let formattedChirp = "<div class='col-12 col-md-10 mx-auto border rounded py-3 mb-4' id='chirp-" + chirp.id 
-    + "'><p>" + chirp.content + 
-      "</p><div class='btn-group'>" + LikeBtn(chirp) +
-      "</div></div>"
-    return formattedChirp
-  }
+    let formattedChirp =
+      "<div class='col-12 col-md-10 mx-auto border rounded py-3 mb-4' id='chirp-" +
+      chirp.id +
+      "'><p>" +
+      chirp.content +
+      "</p><div class='btn-group'>" +
+      LikeBtn(chirp) +
+      "</div></div>";
+    return formattedChirp;
+  };
 
   xhr.responseType = responseType;
   xhr.open(method, url);
   xhr.onload = () => {
-    const serverResponse = xhr.response
-    const listedItems = xhr.response.response //array
-    let finalChirpStr = ""
+    const serverResponse = xhr.response;
+    const listedItems = xhr.response.response; //array
+    let finalChirpStr = "";
     let i;
-    for (i=0; i < listedItems.length; i++) {
-        let chirpObj = listedItems[i]
-        let currentItem = formatChirpElement(chirpObj)
-        finalChirpStr += currentItem 
+    for (i = 0; i < listedItems.length; i++) {
+      let chirpObj = listedItems[i];
+      let currentItem = formatChirpElement(chirpObj);
+      finalChirpStr += currentItem;
     }
-    chirpsElement.innerHTML = finalChirpStr
+    chirpsElement.innerHTML = finalChirpStr;
   };
   xhr.send();
 </script>

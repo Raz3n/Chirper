@@ -1,7 +1,7 @@
 import random
 
 from django.http import HttpResponse, Http404, JsonResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 from .models import Chirp
 from .forms import ChirpForm
@@ -12,9 +12,12 @@ def home_view(request, *args, **kwargs):
 
 def chirp_create_view(request, *args, **kwargs):
     form = ChirpForm(request.POST or None)
+    next_url = request.POST.get("next") or None
     if form.is_valid():
         obj = form.save(commit=False)
         obj.save()
+        if next_url != None:
+            return redirect(next_url)
         form = ChirpForm()
     return render(request, 'components/form.html', context={"form": form})
 
