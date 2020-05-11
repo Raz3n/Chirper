@@ -18,6 +18,7 @@ If not using Django, start with Users. Since this is django, I can start with ch
         -> Image
     -> Delete
     -> Rechirping(retweeting)
+    -> Liking
 
 3. Following / Followers
 

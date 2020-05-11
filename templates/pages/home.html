@@ -3,10 +3,14 @@
 {% block head_title %} Chirper {% endblock head_title%}
 
 {% block content %}
+<div class='row text-center'>
+  <div class='col'>
+    <h1>Welcome to Chirper</h1>
+  </div>
+</div>
 
-Welcome to Chirper.
 
-<div id='chirps'>
+<div class='row' id='chirps'>
     Loading
 </div>
 
@@ -24,12 +28,12 @@ Welcome to Chirper.
   }
 
   LikeBtn = (chirp) => {
-    return "<button class=' btn btn-primary btn-sm' onclick=handleDidLike(" + 
+    return "<button class='btn btn-primary btn-sm' onclick=handleDidLike(" + 
     chirp.id + "," + chirp.likes + ")>" + chirp.likes + " Likes</button>"
   }
 
   formatChirpElement = (chirp) => {
-    let formattedChirp = "<div class='mb-4' id='chirp-" + chirp.id 
+    let formattedChirp = "<div class='col-12 col-md-10 mx-auto border rounded py-3 mb-4' id='chirp-" + chirp.id 
     + "'><p>" + chirp.content + 
       "</p><div class='btn-group'>" + LikeBtn(chirp) +
       "</div></div>"
