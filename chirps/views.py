@@ -21,7 +21,7 @@ def chirp_create_view(request, *args, **kwargs):
         obj = form.save(commit=False)
         obj.save()
         if request.is_ajax():
-            return JsonResponse({}, status=201) #201 for created item
+            return JsonResponse( obj.serialize(), status=201) #201 for created item
         if next_url != None and is_safe_url(next_url, ALLOWED_HOSTS):
             return redirect(next_url)
         form = ChirpForm()
@@ -30,7 +30,7 @@ def chirp_create_view(request, *args, **kwargs):
 
 def chirp_list_view(request, *args, **kwargs):
     qs = Chirp.objects.all()
-    chirps_list = [{"id": x.id, "content": x.content, "likes": random.randint(0, 999) } for x in qs]
+    chirps_list = [ x.serialize() for x in qs]
     data = {
         "isUser": False,
         "response": chirps_list
