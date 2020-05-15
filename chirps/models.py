@@ -10,6 +10,9 @@ class Chirp(models.Model):
     content = models.TextField(blank=True, null=True)
     image = models.FileField(upload_to='images/', blank=True, null=True)
     
+    # def __str__(self): this would show the content of the chirp in the admin.
+    #     return self.content
+    
     class Meta:
         ordering = ['-id']
         
