@@ -37,6 +37,19 @@ def chirp_detail_view(request, chirp_id , *args, **kwargs):
     serializer = ChirpSerializer(obj)
     return Response(serializer.data, status=200)
 
+@api_view(['DELETE', 'POST'])
+@permission_classes([IsAuthenticated])
+def chirp_delete_view(request, chirp_id , *args, **kwargs):
+    qs = Chirp.objects.filter(id=chirp_id)
+    if not qs.exists():
+        return Response({}, status=404)
+    qs = qs.filter(user=request.user)
+    if not qs.exists():
+        return Response({"message": "You cannot delete this chirp."}, status=401)
+    obj = qs.first()
+    obj.delete()
+    return Response({"message": "Chirp removed."}, status=200)
+
 @api_view(['GET'])
 def chirp_list_view(request, *args, **kwargs):
     qs = Chirp.objects.all()
