@@ -1,4 +1,5 @@
-{% extends 'base.html' %} {% block head_title %} Chirper {% endblock head_title%} {% block content %}
+{% extends 'base.html' %} {% block head_title %} Chirper {% endblock head_title%}
+{% block content %}
 <div class="row text-center">
   <div class="col">
     <h1>Welcome to Chirper</h1>
@@ -7,7 +8,12 @@
 
 <div class="row mb-3">
   <div class="col-md-4 mx-auto col-10">
-    <form class="form" id='chirp-create-form' method="POST" action="/create-chirp">
+    <form
+      class="form"
+      id="chirp-create-form"
+      method="POST"
+      action="/create-chirp"
+    >
       {% csrf_token %}
       <div class="d-none alert alert-danger" id="chirp-create-form-error"></div>
       <input type="hidden" value="/" name="next" />
@@ -27,85 +33,80 @@
 </div>
 
 <script>
-
   handleChirpFormError = (msg, display) => {
-    let myErrorDiv = document.getElementById("chirp-create-form-error")
+    let myErrorDiv = document.getElementById("chirp-create-form-error");
     if (display === true) {
       //show error
-      myErrorDiv.setAttribute("class", "d-block alert alert-danger")
-      myErrorDiv.innerText = msg
+      myErrorDiv.setAttribute("class", "d-block alert alert-danger");
+      myErrorDiv.innerText = msg;
     } else {
       //hide error
-      myErrorDiv.setAttribute("class", "d-none alert alert-danger")
-
+      myErrorDiv.setAttribute("class", "d-none alert alert-danger");
     }
-  }
+  };
 
   handleChirpCreateFormDidSubmit = (event) => {
-    event.preventDefault()
-    const myForm = event.target
-    const myFormData = new FormData(myForm)
-    const url = myForm.getAttribute('action')
-    const method = myForm.getAttribute('method')
-    const xhr = new XMLHttpRequest()
-    const responseType = "json"
-    xhr.responseType = responseType
-    xhr.open(method, url)
-    xhr.setRequestHeader("HTTP_X_REQUESTED_WITH", "XMLHttpRequest")
-    xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
+    event.preventDefault();
+    const myForm = event.target;
+    const myFormData = new FormData(myForm);
+    const url = myForm.getAttribute("action");
+    const method = myForm.getAttribute("method");
+    const xhr = new XMLHttpRequest();
+    const responseType = "json";
+    xhr.responseType = responseType;
+    xhr.open(method, url);
+    xhr.setRequestHeader("HTTP_X_REQUESTED_WITH", "XMLHttpRequest");
+    xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
     xhr.onload = () => {
       if (xhr.status === 201) {
-        handleChirpFormError("", false)
+        handleChirpFormError("", false);
         const newChirpJson = xhr.response;
-        const newChirpElement = formatChirpElement(newChirpJson)
-        const ogHtml = chirpsContainerElement.innerHTML
-        chirpsContainerElement.innerHTML = newChirpElement + ogHtml
-        myForm.reset()
+        const newChirpElement = formatChirpElement(newChirpJson);
+        const ogHtml = chirpsContainerElement.innerHTML;
+        chirpsContainerElement.innerHTML = newChirpElement + ogHtml;
+        myForm.reset();
       } else if (xhr.status === 400) {
-        const errorJson = xhr.response
-        const contentError = errorJson.content
+        const errorJson = xhr.response;
+        const contentError = errorJson.content;
         let contentErrorMsg;
         if (contentError) {
-          contentErrorMsg = contentError[0]
+          contentErrorMsg = contentError[0];
           if (contentErrorMsg) {
-              handleChirpFormError(contentErrorMsg, true)
+            handleChirpFormError(contentErrorMsg, true);
           } else {
-              alert("Error occured. Please try again.")
+            alert("Error occured. Please try again.");
           }
         } else {
-          alert("Error occured. Please try again.")
+          alert("Error occured. Please try again.");
         }
-
-      } else if (xhr.status === 500) {
-        alert("There was a server error, please try again.")
-
       } else if (xhr.status === 401) {
-        alert("You must login!")
-        window.location.href = "/login"
+        alert("You must login!");
+        window.location.href = "/login";
+      } else if (xhr.status === 403) {
+        alert("You must login!");
+        window.location.href = "/login";
+      } else if (xhr.status === 500) {
+        alert("There was a server error, please try again.");
       }
-      
-    }
+    };
     xhr.onerror = () => {
-      alert("An error occured. Please try again later.")
+      alert("An error occured. Please try again later.");
+    };
+    xhr.send(myFormData);
+  };
 
-    }
-    xhr.send(myFormData)
-}
-  
-
-
-  const chirpCreateFormEl = document.getElementById("chirp-create-form")
-  chirpCreateFormEl.addEventListener("submit", handleChirpCreateFormDidSubmit)
+  const chirpCreateFormEl = document.getElementById("chirp-create-form");
+  chirpCreateFormEl.addEventListener("submit", handleChirpCreateFormDidSubmit);
 
   const chirpsContainerElement = document.getElementById("chirps"); //get html element
 
   const loadChirps = (chirpsElement) => {
-    const xhr = new XMLHttpRequest()
-    const method = "GET"
-    const url = "/chirps"
-    const responseType = "json"
+    const xhr = new XMLHttpRequest();
+    const method = "GET";
+    const url = "/chirps";
+    const responseType = "json";
     xhr.responseType = responseType;
-    xhr.open(method, url)
+    xhr.open(method, url);
     xhr.onload = () => {
       const serverResponse = xhr.response;
       const listedItems = serverResponse; //array
@@ -115,14 +116,13 @@
         let chirpObj = listedItems[i];
         let currentItem = formatChirpElement(chirpObj);
         finalChirpStr += currentItem;
-    }
-    chirpsElement.innerHTML = finalChirpStr;
-  }
-  xhr.send()
-}
+      }
+      chirpsElement.innerHTML = finalChirpStr;
+    };
+    xhr.send();
+  };
 
-loadChirps(chirpsContainerElement)
-
+  loadChirps(chirpsContainerElement);
 
   handleDidLike = (chirp_id, currentCount) => {
     console.log(chirp_id, currentCount);
@@ -151,8 +151,6 @@ loadChirps(chirpsContainerElement)
       "</div></div>";
     return formattedChirp;
   };
-
-  
 </script>
 
 {% endblock content %}
