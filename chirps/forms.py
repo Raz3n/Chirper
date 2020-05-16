@@ -1,8 +1,9 @@
+from django.conf import settings
 from django import forms
 
 from .models import Chirp
 
-MAX_CHIRP_LENGTH = 240
+MAX_CHIRP_LENGTH = settings.MAX_CHIRP_LENGTH
 
 class ChirpForm(forms.ModelForm):
     class Meta:
