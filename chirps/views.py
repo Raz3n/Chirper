@@ -1,10 +1,11 @@
 import random
-
 from django.conf import settings
 from django.http import HttpResponse, Http404, JsonResponse
 from django.shortcuts import render, redirect
 from django.utils.http import is_safe_url
 
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 from .models import Chirp
 from .forms import ChirpForm
 from .serializers import ChirpSerializer
@@ -15,12 +16,28 @@ ALLOWED_HOSTS = settings.ALLOWED_HOSTS
 def home_view(request, *args, **kwargs):
     return render(request, "pages/home.html", context={}, status=200)
 
+@api_view(['POST']) #http method the client sends == post
 def chirp_create_view(request, *args, **kwargs):
     serializer = ChirpSerializer(data = request.POST or None)
-    if serializer.is_valid():
-        obj = serializer.save(user=request.user)
-        return JsonResponse(serializer.data, status=201)
-    return JsonResponse({}, status=400)
+    if serializer.is_valid(raise_exception=True):
+        serializer.save(user=request.user)
+        return Response(serializer.data, status = 201)
+    return Response({}, status=400)
+
+@api_view(['GET'])
+def chirp_detail_view(request, chirp_id , *args, **kwargs):
+    qs = Chirp.objects.filter(id=chirp_id)
+    if not qs.exists():
+        return Response({}, status=404)
+    obj = qs.first()
+    serializer = ChirpSerializer(obj)
+    return Response(serializer.data, status=200)
+
+@api_view(['GET'])
+def chirp_list_view(request, *args, **kwargs):
+    qs = Chirp.objects.all()
+    serializer = ChirpSerializer(qs, many=True)
+    return Response(serializer.data)
 
 
 def chirp_create_view_pure_django(request, *args, **kwargs):
@@ -37,7 +54,7 @@ def chirp_create_view_pure_django(request, *args, **kwargs):
         obj.user = user
         obj.save()
         if request.is_ajax():
-            return JsonResponse( obj.serialize(), status=201) #201 for created item
+            return JsonResponse( obj.serialize(), status=201)
         if next_url != None and is_safe_url(next_url, ALLOWED_HOSTS):
             return redirect(next_url)
         form = ChirpForm()
@@ -47,7 +64,7 @@ def chirp_create_view_pure_django(request, *args, **kwargs):
     return render(request, 'components/form.html', context={"form": form})
 
 
-def chirp_list_view(request, *args, **kwargs):
+def chirp_list_view_pure_django(request, *args, **kwargs):
     qs = Chirp.objects.all()
     chirps_list = [ x.serialize() for x in qs]
     data = {
@@ -56,7 +73,7 @@ def chirp_list_view(request, *args, **kwargs):
     }
     return JsonResponse(data)
 
-def chirp_detail_view(request, chirp_id, *args, **kwargs):
+def chirp_detail_view_pure_django(request, chirp_id, *args, **kwargs):
     data = {
         "id": chirp_id,
     }
