@@ -5,6 +5,10 @@ from .models import Chirp
 
 MAX_CHIRP_LENGTH = settings.MAX_CHIRP_LENGTH
 
+class ChirpActionSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    action = serializers.CharField()
+    
 class ChirpSerializer(serializers.ModelSerializer):
     class Meta:
         model = Chirp

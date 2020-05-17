@@ -30,6 +30,7 @@ ALLOWED_HOSTS = ['127.0.0.1']
 LOGIN_URL = "/login"
 
 MAX_CHIRP_LENGTH = 240
+CHIRP_ACTION_OPTIONS = ["like", "unlike", "rechirp"]
 
 # Application definition
 

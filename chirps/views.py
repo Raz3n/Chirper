@@ -10,7 +10,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from .models import Chirp
 from .forms import ChirpForm
-from .serializers import ChirpSerializer
+from .serializers import ChirpSerializer, ChirpActionSerializer
 
 ALLOWED_HOSTS = settings.ALLOWED_HOSTS
 
@@ -48,6 +48,31 @@ def chirp_delete_view(request, chirp_id , *args, **kwargs):
         return Response({"message": "You cannot delete this chirp."}, status=401)
     obj = qs.first()
     obj.delete()
+    return Response({"message": "Chirp removed."}, status=200)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def chirp_action_view(request, *args, **kwargs):
+    '''
+        id is required.
+        Action options are : Like, Unlike, Re-Chirp
+    '''
+    serializer = ChirpActionSerializer(request.POST)
+    if serializer.is_valid(raise_exception=True):
+        data = serializer.validated_data
+        chirp_id = data.get("id")
+        action = data.get("action")
+        qs = Chirp.objects.filter(id=chirp_id)
+        if not qs.exists():
+            return Response({}, status=404)
+        obj = qs.first()
+        if action == "like":
+            obj.likes.add(request.user)
+        elif action == "unlike":
+            obj.likes.remove(request.user)
+        elif action == "rechirp":
+            #to do later
+            pass
     return Response({"message": "Chirp removed."}, status=200)
 
 @api_view(['GET'])
