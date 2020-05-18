@@ -141,7 +141,7 @@
 
   loadChirps(chirpsContainerElement);
 
-  handleDidLike = (chirp_id, currentCount, action) => {
+  handleChirpActionBtn = (chirp_id, currentCount, action) => {
     console.log(chirp_id, currentCount);
     const url = "/api/chirps/action";
     const method = "POST";
@@ -166,7 +166,7 @@
 
   LikeBtn = (chirp) => {
     return (
-      "<button class='btn btn-primary btn-sm' onclick=handleDidLike(" +
+      "<button class='btn btn-primary btn-sm' onclick=handleChirpActionBtn(" +
       chirp.id +
       "," +
       chirp.likes +
@@ -178,11 +178,21 @@
 
   UnLikeBtn = (chirp) => {
     return (
-      "<button class='btn btn-outline-primary btn-sm' onclick=handleDidLike(" +
+      "<button class='btn btn-outline-primary btn-sm' onclick=handleChirpActionBtn(" +
       chirp.id +
       "," +
       chirp.likes +
       ",'unlike')>Unlike</button>"
+    );
+  };
+
+  RechirpBtn = (chirp) => {
+    return (
+      "<button class='btn btn-outline-success btn-sm' onclick=handleChirpActionBtn(" +
+      chirp.id +
+      "," +
+      chirp.likes +
+      ",'rechirp')>Rechirp</button>"
     );
   };
 
@@ -195,6 +205,7 @@
       "</p><div class='btn-group'>" +
       LikeBtn(chirp) +
       UnLikeBtn(chirp) +
+      RechirpBtn(chirp) +
       "</div></div>";
     return formattedChirp;
   };
