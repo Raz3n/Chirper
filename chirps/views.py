@@ -10,7 +10,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from .models import Chirp
 from .forms import ChirpForm
-from .serializers import ChirpSerializer, ChirpActionSerializer
+from .serializers import ChirpSerializer, ChirpActionSerializer, ChirpCreateSerializer
 
 ALLOWED_HOSTS = settings.ALLOWED_HOSTS
 
@@ -22,7 +22,7 @@ def home_view(request, *args, **kwargs):
 # @authentication_classes([SessionAuthentication, MyCustomAuth])
 @permission_classes([IsAuthenticated])
 def chirp_create_view(request, *args, **kwargs):
-    serializer = ChirpSerializer(data = request.POST or None)
+    serializer = ChirpCreateSerializer(data = request.POST or None)
     if serializer.is_valid(raise_exception=True):
         serializer.save(user=request.user)
         return Response(serializer.data, status = 201)
@@ -62,6 +62,7 @@ def chirp_action_view(request, *args, **kwargs):
         data = serializer.validated_data
         chirp_id = data.get("id")
         action = data.get("action")
+        content = data.get("content")
         qs = Chirp.objects.filter(id=chirp_id)
         if not qs.exists():
             return Response({}, status=404)
@@ -73,8 +74,13 @@ def chirp_action_view(request, *args, **kwargs):
         elif action == "unlike":
             obj.likes.remove(request.user)
         elif action == "rechirp":
-            #to do later
-            pass
+            new_chirp = Chirp.objects.create(
+                    user=request.user,
+                    parent=obj,
+                    content=content,
+                    )
+            serializer = ChirpSerializer(new_chirp)
+            return Response(serializer.data, status=200)
     return Response({}, status=200)
 
 @api_view(['GET'])
