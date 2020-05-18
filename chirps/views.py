@@ -73,6 +73,8 @@ def chirp_action_view(request, *args, **kwargs):
             return Response(serializer.data, status=200)
         elif action == "unlike":
             obj.likes.remove(request.user)
+            serializer = ChirpSerializer(obj)
+            return Response(serializer.data, status=200)
         elif action == "rechirp":
             new_chirp = Chirp.objects.create(
                     user=request.user,
@@ -80,7 +82,7 @@ def chirp_action_view(request, *args, **kwargs):
                     content=content,
                     )
             serializer = ChirpSerializer(new_chirp)
-            return Response(serializer.data, status=200)
+            return Response(serializer.data, status=201)
     return Response({}, status=200)
 
 @api_view(['GET'])
