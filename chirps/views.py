@@ -57,7 +57,7 @@ def chirp_action_view(request, *args, **kwargs):
         id is required.
         Action options are : Like, Unlike, Re-Chirp
     '''
-    serializer = ChirpActionSerializer(request.POST)
+    serializer = ChirpActionSerializer(data=request.data)
     if serializer.is_valid(raise_exception=True):
         data = serializer.validated_data
         chirp_id = data.get("id")
@@ -68,12 +68,14 @@ def chirp_action_view(request, *args, **kwargs):
         obj = qs.first()
         if action == "like":
             obj.likes.add(request.user)
+            serializer = ChirpSerializer(obj)
+            return Response(serializer.data, status=200)
         elif action == "unlike":
             obj.likes.remove(request.user)
         elif action == "rechirp":
             #to do later
             pass
-    return Response({"message": "Chirp removed."}, status=200)
+    return Response({}, status=200)
 
 @api_view(['GET'])
 def chirp_list_view(request, *args, **kwargs):

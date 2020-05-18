@@ -1,4 +1,5 @@
-{% extends 'base.html' %} {% block head_title %} Chirper {% endblock head_title%}
+{% extends 'base.html' %}
+{% block head_title %} Chirper {% endblock head_title%}
 {% block content %}
 <div class="row text-center">
   <div class="col">
@@ -33,6 +34,22 @@
 </div>
 
 <script>
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== "") {
+      let cookies = document.cookie.split(";");
+      for (let i = 0; i < cookies.length; i++) {
+        let cookie = cookies[i].trim();
+        // Does this cookie string begin with the name we want?
+        if (cookie.substring(0, name.length + 1) === name + "=") {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+
   handleChirpFormError = (msg, display) => {
     let myErrorDiv = document.getElementById("chirp-create-form-error");
     if (display === true) {
@@ -124,8 +141,27 @@
 
   loadChirps(chirpsContainerElement);
 
-  handleDidLike = (chirp_id, currentCount) => {
+  handleDidLike = (chirp_id, currentCount, action) => {
     console.log(chirp_id, currentCount);
+    const url = "/api/chirps/action";
+    const method = "POST";
+    const data = JSON.stringify({
+      id: chirp_id,
+      action: action,
+    });
+    const xhr = new XMLHttpRequest();
+    const csrftoken = getCookie("csrftoken");
+    xhr.open(method, url);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.setRequestHeader("HTTP_X_REQUESTED_WITH", "XMLHttpRequest");
+    xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+    xhr.onload = () => {
+      // react will handle state when implemented
+      loadChirps(chirpsContainerElement);
+    };
+    xhr.send(data);
+    return;
   };
 
   LikeBtn = (chirp) => {
@@ -134,9 +170,19 @@
       chirp.id +
       "," +
       chirp.likes +
-      ")>" +
+      ",'like')>" +
       chirp.likes +
       " Likes</button>"
+    );
+  };
+
+  UnLikeBtn = (chirp) => {
+    return (
+      "<button class='btn btn-outline-primary btn-sm' onclick=handleDidLike(" +
+      chirp.id +
+      "," +
+      chirp.likes +
+      ",'unlike')>Unlike</button>"
     );
   };
 
@@ -148,6 +194,7 @@
       chirp.content +
       "</p><div class='btn-group'>" +
       LikeBtn(chirp) +
+      UnLikeBtn(chirp) +
       "</div></div>";
     return formattedChirp;
   };
