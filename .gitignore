@@ -6,7 +6,8 @@
 /staticfiles/*
 /mediafiles/*
 __pycache__/
-/.vscode/
+.vscode/
+
 
 # coverage result
 .coverage
@@ -14,6 +15,7 @@ __pycache__/
 
 # pycharm
 .idea/
+
 
 # data
 *.dump
