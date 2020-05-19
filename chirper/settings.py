@@ -26,7 +26,7 @@ SECRET_KEY = '2=8cad+lg9*c90is53t5ia_^ef=8qbbvt#nqz9etw2qad7b#2p'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 LOGIN_URL = "/login"
 
 MAX_CHIRP_LENGTH = 240
