@@ -48,3 +48,8 @@ spritesmith.scss
 
 # templated email
 tmp_email/
+
+manage.py
+
+pipfile
+pipfile.lock
