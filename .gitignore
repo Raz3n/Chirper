@@ -53,3 +53,5 @@ manage.py
 
 pipfile
 pipfile.lock
+
+db.sqlite3
