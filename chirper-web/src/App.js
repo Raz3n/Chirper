@@ -5,7 +5,7 @@ import './App.css';
 const loadChirps = (callback) => {
   const xhr = new XMLHttpRequest();
   const method = "GET";
-  const url = "http://localhost:8000/api/chirps";
+  const url = "http://localhost:8000/api/chirps/";
   const responseType = "json";
   xhr.responseType = responseType;
   xhr.open(method, url);
