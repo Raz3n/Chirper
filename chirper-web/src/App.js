@@ -18,12 +18,23 @@ const loadChirps = (callback) => {
   xhr.send();
 };
 
+const ActionBtn = (props) => {
+  const {chirp, action} = props
+  const className = props.className ? props.className : 'btn btn-primary btn-sm'
+  return (
+    action.type === 'like' ? <button className={className}>{chirp.likes}Likes</button> : null
+  );
+};
+
 const Chirp = (props) => {
   const { chirp } = props;
   const className = props.className ? props.className : 'col-10 mx-auto col-md-6'
   return (
     <div className={className}>
         <p>{chirp.id} - {chirp.content}</p>
+        <div className='btn btn-group'>
+          <ActionBtn chirp={chirp} action={{type:"like"}}/>
+        </div>
     </div>
   );
 };
