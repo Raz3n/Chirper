@@ -1,7 +1,7 @@
 import React from "react";
 import logo from "./logo.svg";
 import "./App.css";
-import { ChirpsList } from "./chirps";
+import { ChirpsComponent } from "./chirps";
 
 function App() {
 
@@ -13,7 +13,7 @@ function App() {
           Edit <code>src/App.js</code> and save to reload.
         </p>
         <div>
-          <ChirpsList />
+          <ChirpsComponent />
         </div>
         <a
           className="App-link"

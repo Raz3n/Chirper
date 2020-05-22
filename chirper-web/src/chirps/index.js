@@ -1,7 +1,8 @@
-import {ActionBtn, Chirp, ChirpsList} from './components'
+import {ActionBtn, Chirp, ChirpsList, ChirpsComponent} from './components'
 
 export {
     ActionBtn, 
     Chirp,
-    ChirpsList
+    ChirpsList,
+    ChirpsComponent
 }
