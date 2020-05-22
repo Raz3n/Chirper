@@ -27,13 +27,25 @@ export const ChirpsList = (props) => {
 };
 
 export const ActionBtn = (props) => {
-  const { chirp, action } = props;
-  const className = props.className
-    ? props.className
-    : "btn btn-primary btn-sm";
-  return action.type === "like" ? (
-    <button className={className}>{chirp.likes}Likes</button>
-  ) : null;
+  const { chirp, action } = props
+  const [likes, setLikes] = useState(chirp.likes ? chirp.likes : 0)
+  const [userLike, setUserLike] = useState(chirp.userLike === true ? true : false)
+  const className = props.className ? props.className : 'btn btn-primary btn-sm'
+  const actionDisplay = action.display ? action.display : 'Action'
+  const handleClick = (event) => {
+    event.preventDefault()
+    if (action.type === 'like') {
+      if (userLike === true) {
+        setLikes(likes -1 )
+        setUserLike(false)
+      } else {
+        setLikes(likes + 1)
+        setUserLike(true)
+      }
+    }
+  }
+  const display = action.type === 'like' ? `${likes} ${actionDisplay}` : actionDisplay
+  return <button className={className} onClick={handleClick}>{display}</button>
 };
 
 export const Chirp = (props) => {
@@ -47,8 +59,9 @@ export const Chirp = (props) => {
         {chirp.id} - {chirp.content}
       </p>
       <div className="btn btn-group">
-        <ActionBtn chirp={chirp} action={{ type: "like" }} />
-        <ActionBtn chirp={chirp} action={{ type: "like" }} />
+        <ActionBtn chirp={chirp} action={{ type: "like", display: "Likes" }} />
+        <ActionBtn chirp={chirp} action={{ type: "unlike", display: "Unlike" }} />
+        <ActionBtn chirp={chirp} action={{ type: "rechirp", display: "Rechirp" }} />
       </div>
     </div>
   );
