@@ -3,10 +3,17 @@ import { loadChirps } from "../lookup";
 
 export const ChirpsComponent = (props) => {
   const textAreaRef = React.createRef();
+  const [newChirps, setNewChirps] = useState([])
   const handleSubmit = (event) => {
     event.preventDefault();
     const newVal = textAreaRef.current.value;
-    console.log(newVal);
+    let tempNewChirps = [...newChirps]
+    tempNewChirps.unshift({
+      content: newVal,
+      likes: 0,
+      id: 12313
+    })
+    setNewChirps(tempNewChirps)
     textAreaRef.current.value = "";
   };
   return (
@@ -24,25 +31,31 @@ export const ChirpsComponent = (props) => {
           </button>
         </form>
       </div>
-      <ChirpsList />
+      <ChirpsList newChirps={newChirps} />
     </div>
   );
 };
 
 export const ChirpsList = (props) => {
-  const [chirps, setChirps] = useState([]);
-
+  const [chirpsInit, setChirpsInit] = useState([]);
+  const [chirps, setChirps] = useState([])
+  useEffect(() => {
+    const final = [...props.newChirps].concat(chirpsInit)
+    if (final.length !== chirps.length) {
+      setChirps(final)
+    }
+  }, [props.newChirps, chirps, chirpsInit])
   useEffect(() => {
     const myCallback = (response, status) => {
       if (status === 200) {
-        setChirps(response);
+        setChirpsInit(response);
       } else {
         alert("There was an error");
       }
     };
-    //do my lookup
-    loadChirps(myCallback);
-  }, []);
+ loadChirps(myCallback);
+ //check this
+  }, [chirpsInit]);
   return chirps.map((item, index) => {
     return (
       <Chirp
