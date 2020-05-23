@@ -17,7 +17,7 @@ from chirps.views import (
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', home_view),
-    path('react/', TemplateView.as_view(template_name='react.html')),
+    path('react/', TemplateView.as_view(template_name='react_via_dj.html')),
     path('create-chirp', chirp_create_view),
     path('chirps', chirp_list_view),
     path('chirps/<int:chirp_id>', chirp_detail_view),

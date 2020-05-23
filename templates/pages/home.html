@@ -1,13 +1,16 @@
 {% extends 'base.html' %}
 {% block head_title %} Chirper {% endblock head_title%}
 {% block content %}
-<div class="row text-center">
+
+<div id="chirper"></div>
+
+<div class="row text-center d-none">
   <div class="col">
     <h1>Welcome to Chirper</h1>
   </div>
 </div>
 
-<div class="row mb-3">
+<div class="row mb-3 d-none">
   <div class="col-md-4 mx-auto col-10">
     <form
       class="form"
@@ -29,7 +32,7 @@
   </div>
 </div>
 
-<div class="row" id="chirps">
+<div class="row d-none" id="chirps">
   Loading
 </div>
 
