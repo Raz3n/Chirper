@@ -3,17 +3,17 @@ import { loadChirps } from "../lookup";
 
 export const ChirpsComponent = (props) => {
   const textAreaRef = React.createRef();
-  const [newChirps, setNewChirps] = useState([])
+  const [newChirps, setNewChirps] = useState([]);
   const handleSubmit = (event) => {
     event.preventDefault();
     const newVal = textAreaRef.current.value;
-    let tempNewChirps = [...newChirps]
+    let tempNewChirps = [...newChirps];
     tempNewChirps.unshift({
       content: newVal,
       likes: 0,
-      id: 12313
-    })
-    setNewChirps(tempNewChirps)
+      id: 12313,
+    });
+    setNewChirps(tempNewChirps);
     textAreaRef.current.value = "";
   };
   return (
@@ -38,24 +38,27 @@ export const ChirpsComponent = (props) => {
 
 export const ChirpsList = (props) => {
   const [chirpsInit, setChirpsInit] = useState([]);
-  const [chirps, setChirps] = useState([])
+  const [chirps, setChirps] = useState([]);
+  const [chirpsDidSet, setChirpsDidSet] = useState(false);
   useEffect(() => {
-    const final = [...props.newChirps].concat(chirpsInit)
+    const final = [...props.newChirps].concat(chirpsInit);
     if (final.length !== chirps.length) {
-      setChirps(final)
+      setChirps(final);
     }
-  }, [props.newChirps, chirps, chirpsInit])
+  }, [props.newChirps, chirps, chirpsInit]);
   useEffect(() => {
-    const myCallback = (response, status) => {
-      if (status === 200) {
-        setChirpsInit(response);
-      } else {
-        alert("There was an error");
-      }
-    };
- loadChirps(myCallback);
- //check this
-  }, [chirpsInit]);
+    if (chirpsDidSet === false) {
+      const myCallback = (response, status) => {
+        if (status === 200) {
+          setChirpsInit(response);
+          setChirpsDidSet(true)
+        } else {
+          alert("There was an error");
+        }
+      };
+      loadChirps(myCallback);
+    }
+  }, [chirpsInit, chirpsDidSet, setChirpsDidSet]);
   return chirps.map((item, index) => {
     return (
       <Chirp
