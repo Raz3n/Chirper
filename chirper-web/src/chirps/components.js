@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { loadChirps } from "../lookup";
+import { createChirp, loadChirps } from "../lookup";
 
 export const ChirpsComponent = (props) => {
   const textAreaRef = React.createRef();
@@ -8,11 +8,15 @@ export const ChirpsComponent = (props) => {
     event.preventDefault();
     const newVal = textAreaRef.current.value;
     let tempNewChirps = [...newChirps];
-    tempNewChirps.unshift({
-      content: newVal,
-      likes: 0,
-      id: 12313,
-    });
+    createChirp(newVal, (response, status) => {
+      if (status === 201) {
+        tempNewChirps.unshift(response)
+      } else {
+        console.log(response)
+        alert("An error occured, please try again.")
+      }
+    })
+    
     setNewChirps(tempNewChirps);
     textAreaRef.current.value = "";
   };
