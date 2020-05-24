@@ -8,6 +8,7 @@ export const ChirpsComponent = (props) => {
     event.preventDefault();
     const newVal = textAreaRef.current.value;
     let tempNewChirps = [...newChirps];
+    
     createChirp(newVal, (response, status) => {
       if (status === 201) {
         tempNewChirps.unshift(response)
@@ -50,6 +51,7 @@ export const ChirpsList = (props) => {
       setChirps(final);
     }
   }, [props.newChirps, chirps, chirpsInit]);
+
   useEffect(() => {
     if (chirpsDidSet === false) {
       const myCallback = (response, status) => {
@@ -59,23 +61,17 @@ export const ChirpsList = (props) => {
         } else {
           alert("There was an error");
         }
-      };
+      }
       loadChirps(myCallback);
     }
   }, [chirpsInit, chirpsDidSet, setChirpsDidSet]);
-  return chirps.map((item, index) => {
-    return (
-      <Chirp
-        chirp={item}
-        className="my-5 py-5 border bg-white text-dark"
-        key={`${index}-{item.id}`}
-      />
-    );
-  });
-};
+    return chirps.map((item, index)=>{
+      return <Chirp chirp={item} className='my-5 py-5 border bg-white text-dark' key={`${index}-{item.id}`} />
+    })
+  }
 
 export const ActionBtn = (props) => {
-  const { chirp, action } = props;
+  const {chirp, action} = props;
   const [likes, setLikes] = useState(chirp.likes ? chirp.likes : 0);
   const [userLike, setUserLike] = useState(
     chirp.userLike === true ? true : false
