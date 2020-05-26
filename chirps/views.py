@@ -10,7 +10,11 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from .models import Chirp
 from .forms import ChirpForm
-from .serializers import ChirpSerializer, ChirpActionSerializer, ChirpCreateSerializer
+from .serializers import (
+    ChirpSerializer,
+    ChirpActionSerializer,
+    ChirpCreateSerializer,
+    )
 
 ALLOWED_HOSTS = settings.ALLOWED_HOSTS
 
@@ -25,7 +29,7 @@ def home_view(request, *args, **kwargs):
 # @authentication_classes([SessionAuthentication, MyCustomAuth])
 @permission_classes([IsAuthenticated])
 def chirp_create_view(request, *args, **kwargs):
-    serializer = ChirpCreateSerializer(data = request.POST or None)
+    serializer = ChirpCreateSerializer(data = request.data)
     if serializer.is_valid(raise_exception=True):
         serializer.save(user=request.user)
         return Response(serializer.data, status = 201)

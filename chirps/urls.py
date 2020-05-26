@@ -1,7 +1,6 @@
 from django.urls import path
 
 from .views import (
-    home_view,
     chirp_action_view,
     chirp_delete_view,
     chirp_detail_view, 

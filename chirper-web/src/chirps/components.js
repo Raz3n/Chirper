@@ -80,6 +80,7 @@ export const ActionBtn = (props) => {
     ? props.className
     : "btn btn-primary btn-sm";
   const actionDisplay = action.display ? action.display : "Action";
+  
   const handleClick = (event) => {
     event.preventDefault();
     if (action.type === "like") {
