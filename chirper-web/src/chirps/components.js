@@ -4,21 +4,24 @@ import { createChirp, loadChirps } from "../lookup";
 export const ChirpsComponent = (props) => {
   const textAreaRef = React.createRef();
   const [newChirps, setNewChirps] = useState([]);
+
+  const handleBackendUpdate = (response, status) => {
+    // backend api response handler
+    let tempNewChirps = [...newChirps];
+    if (status === 201) {
+      tempNewChirps.unshift(response);
+      setNewChirps(tempNewChirps);
+    } else {
+      console.log(response);
+      alert("An error occured, please try again.");
+    }
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const newVal = textAreaRef.current.value;
-    let tempNewChirps = [...newChirps];
-    
-    createChirp(newVal, (response, status) => {
-      if (status === 201) {
-        tempNewChirps.unshift(response)
-      } else {
-        console.log(response)
-        alert("An error occured, please try again.")
-      }
-    })
-    
-    setNewChirps(tempNewChirps);
+    // backend api request handler
+    createChirp(newVal, handleBackendUpdate);
     textAreaRef.current.value = "";
   };
   return (
@@ -57,21 +60,27 @@ export const ChirpsList = (props) => {
       const myCallback = (response, status) => {
         if (status === 200) {
           setChirpsInit(response);
-          setChirpsDidSet(true)
+          setChirpsDidSet(true);
         } else {
           alert("There was an error");
         }
-      }
+      };
       loadChirps(myCallback);
     }
   }, [chirpsInit, chirpsDidSet, setChirpsDidSet]);
-    return chirps.map((item, index)=>{
-      return <Chirp chirp={item} className='my-5 py-5 border bg-white text-dark' key={`${index}-{item.id}`} />
-    })
-  }
+  return chirps.map((item, index) => {
+    return (
+      <Chirp
+        chirp={item}
+        className="my-5 py-5 border bg-white text-dark"
+        key={`${index}-{item.id}`}
+      />
+    );
+  });
+};
 
 export const ActionBtn = (props) => {
-  const {chirp, action} = props;
+  const { chirp, action } = props;
   const [likes, setLikes] = useState(chirp.likes ? chirp.likes : 0);
   const [userLike, setUserLike] = useState(
     chirp.userLike === true ? true : false
@@ -80,7 +89,7 @@ export const ActionBtn = (props) => {
     ? props.className
     : "btn btn-primary btn-sm";
   const actionDisplay = action.display ? action.display : "Action";
-  
+
   const handleClick = (event) => {
     event.preventDefault();
     if (action.type === "like") {
