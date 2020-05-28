@@ -1,6 +1,5 @@
-import {createChirp, loadChirps} from "./components"
+import {backendLookup} from "./components"
 
 export {
-    createChirp,
-    loadChirps
+    backendLookup
 }

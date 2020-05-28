@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { createChirp, loadChirps } from "../lookup";
+import { apiChirpCreate, apiChirpList } from "./lookup";
 
 export const ChirpsComponent = (props) => {
   const textAreaRef = React.createRef();
@@ -21,7 +21,7 @@ export const ChirpsComponent = (props) => {
     event.preventDefault();
     const newVal = textAreaRef.current.value;
     // backend api request handler
-    createChirp(newVal, handleBackendUpdate);
+    apiChirpCreate(newVal, handleBackendUpdate);
     textAreaRef.current.value = "";
   };
   return (
@@ -57,7 +57,7 @@ export const ChirpsList = (props) => {
 
   useEffect(() => {
     if (chirpsDidSet === false) {
-      const myCallback = (response, status) => {
+      const handleChirpListLookup = (response, status) => {
         if (status === 200) {
           setChirpsInit(response);
           setChirpsDidSet(true);
@@ -65,7 +65,7 @@ export const ChirpsList = (props) => {
           alert("There was an error");
         }
       };
-      loadChirps(myCallback);
+      apiChirpList(handleChirpListLookup);
     }
   }, [chirpsInit, chirpsDidSet, setChirpsDidSet]);
   return chirps.map((item, index) => {

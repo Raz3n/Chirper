@@ -13,7 +13,7 @@
   return cookieValue;
 }
 
-const lookup = (method, endpoint, callback, data) => {
+export const backendLookup = (method, endpoint, callback, data) => {
   let jsonData;
   if (data){
     jsonData = JSON.stringify(data)
@@ -39,12 +39,4 @@ const lookup = (method, endpoint, callback, data) => {
     callback({"message": "The request was an error"}, 400)
   }
   xhr.send(jsonData)
-}
-
-export const createChirp = (newChirp, callback) => {
-  lookup("POST", "/chirps/create/", callback, {content: newChirp})
-}
-
-export const loadChirps = (callback) => {
-    lookup("GET", "/chirps/", callback)
 }
