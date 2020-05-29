@@ -80,11 +80,8 @@ export const ChirpsList = (props) => {
 };
 
 export const ActionBtn = (props) => {
-  const { chirp, action } = props;
-  const [likes, setLikes] = useState(chirp.likes ? chirp.likes : 0);
-  // const [userLike, setUserLike] = useState(
-  //   chirp.userLike === true ? true : false
-  // );
+  const { chirp, action, didPerformAction } = props;
+  const likes = chirp.likes ? chirp.likes : 0
   const className = props.className
     ? props.className
     : "btn btn-primary btn-sm";
@@ -92,17 +89,15 @@ export const ActionBtn = (props) => {
 
   const handleActionBackendEvent = (response, status) => {
     console.log(response, status);
-    if (status === 200) {
-      setLikes(response.likes);
-      // setUserLike(true)
+    if ((status === 200 || status === 201) && didPerformAction) {
+      didPerformAction(response, status)
     }
   };
   const handleClick = (event) => {
     event.preventDefault();
     apiChirpAction(chirp.id, action.type, handleActionBackendEvent);
   };
-  const display =
-    action.type === "like" ? `${likes} ${actionDisplay}` : actionDisplay;
+  const display = action.type === "like" ? `${likes} ${actionDisplay}` : actionDisplay;
   return (
     <button className={className} onClick={handleClick}>
       {display}
@@ -112,22 +107,32 @@ export const ActionBtn = (props) => {
 
 export const ParentChirp = (props) => {
   const { chirp } = props;
-
-  return chirp.parent ? (
+  return chirp.parent ? 
     <div className="row">
       <div className="col-11 mx-auto p-3 border rounded">
         <p className="mb-0 text-muted small">Rechirp</p>
         <Chirp className={" "} chirp={chirp.parent} />
       </div>
-    </div>
-  ) : null;
+    </div> : null;
 };
 
 export const Chirp = (props) => {
   const { chirp } = props;
+  const [actionChirp, setActionChirp] = useState(
+    props.chirp ? props.chirp : null
+  );
   const className = props.className
     ? props.className
     : "col-10 mx-auto col-md-6";
+
+  const handlePerformAction = (newActionChirp, status) => {
+    if (status === 200) {
+      setActionChirp(newActionChirp)
+    } else if (status === 201) {
+      //let the chirplist know
+    }
+  }
+
   return (
     <div className={className}>
       <div>
@@ -136,17 +141,25 @@ export const Chirp = (props) => {
         </p>
         <ParentChirp chirp={chirp} />
       </div>
-      <div className="btn btn-group">
-        <ActionBtn chirp={chirp} action={{ type: "like", display: "Likes" }} />
-        <ActionBtn
-          chirp={chirp}
-          action={{ type: "unlike", display: "Unlike" }}
-        />
-        <ActionBtn
-          chirp={chirp}
-          action={{ type: "rechirp", display: "Rechirp" }}
-        />
-      </div>
+      {actionChirp && (
+        <div className="btn btn-group">
+          <ActionBtn
+            chirp={actionChirp}
+            didPerformAction={handlePerformAction}
+            action={{ type: "like", display: "Likes" }}
+          />
+          <ActionBtn
+            chirp={actionChirp}
+            didPerformAction={handlePerformAction}
+            action={{ type: "unlike", display: "Unlike" }}
+          />
+          <ActionBtn
+            chirp={actionChirp}
+            didPerformAction={handlePerformAction}
+            action={{ type: "rechirp", display: "Rechirp" }}
+          />
+        </div>
+      )}
     </div>
   );
 };
