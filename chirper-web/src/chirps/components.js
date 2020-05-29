@@ -68,10 +68,20 @@ export const ChirpsList = (props) => {
       apiChirpList(handleChirpListLookup);
     }
   }, [chirpsInit, chirpsDidSet, setChirpsDidSet]);
+
+  const handleDidRechirp = (newChirp) => {
+    const updateChirpsInit = [...chirpsInit]
+    updateChirpsInit.unshift(newChirp)
+    setChirpsInit(updateChirpsInit)
+    const updateFinalChirps = [...chirps]
+    updateFinalChirps.unshift(chirps)
+    setChirps(updateFinalChirps)
+  }
   return chirps.map((item, index) => {
     return (
       <Chirp
         chirp={item}
+        didRechirp={handleDidRechirp}
         className="my-5 py-5 border bg-white text-dark"
         key={`${index}-{item.id}`}
       />
@@ -111,13 +121,13 @@ export const ParentChirp = (props) => {
     <div className="row">
       <div className="col-11 mx-auto p-3 border rounded">
         <p className="mb-0 text-muted small">Rechirp</p>
-        <Chirp className={" "} chirp={chirp.parent} />
+        <Chirp hideActions className={" "} chirp={chirp.parent} />
       </div>
     </div> : null;
 };
 
 export const Chirp = (props) => {
-  const { chirp } = props;
+  const { chirp, didRechirp, hideActions } = props;
   const [actionChirp, setActionChirp] = useState(
     props.chirp ? props.chirp : null
   );
@@ -129,7 +139,9 @@ export const Chirp = (props) => {
     if (status === 200) {
       setActionChirp(newActionChirp)
     } else if (status === 201) {
-      //let the chirplist know
+      if (didRechirp) {
+        didRechirp(newActionChirp)
+      }
     }
   }
 
@@ -141,7 +153,7 @@ export const Chirp = (props) => {
         </p>
         <ParentChirp chirp={chirp} />
       </div>
-      {actionChirp && (
+      {(actionChirp && hideActions !== SVGComponentTransferFunctionElement) &&
         <div className="btn btn-group">
           <ActionBtn
             chirp={actionChirp}
@@ -159,7 +171,7 @@ export const Chirp = (props) => {
             action={{ type: "rechirp", display: "Rechirp" }}
           />
         </div>
-      )}
+      }
     </div>
   );
 };
