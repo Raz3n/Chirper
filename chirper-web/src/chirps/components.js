@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { apiChirpCreate, apiChirpList } from "./lookup";
+import { apiChirpAction, apiChirpCreate, apiChirpList } from "./lookup";
 
 export const ChirpsComponent = (props) => {
   const textAreaRef = React.createRef();
@@ -82,25 +82,24 @@ export const ChirpsList = (props) => {
 export const ActionBtn = (props) => {
   const { chirp, action } = props;
   const [likes, setLikes] = useState(chirp.likes ? chirp.likes : 0);
-  const [userLike, setUserLike] = useState(
-    chirp.userLike === true ? true : false
-  );
+  // const [userLike, setUserLike] = useState(
+  //   chirp.userLike === true ? true : false
+  // );
   const className = props.className
     ? props.className
     : "btn btn-primary btn-sm";
   const actionDisplay = action.display ? action.display : "Action";
 
+  const handleActionBackendEvent = (response, status) => {
+    console.log(response, status);
+    if (status === 200) {
+      setLikes(response.likes);
+      // setUserLike(true)
+    }
+  };
   const handleClick = (event) => {
     event.preventDefault();
-    if (action.type === "like") {
-      if (userLike === true) {
-        setLikes(likes - 1);
-        setUserLike(false);
-      } else {
-        setLikes(likes + 1);
-        setUserLike(true);
-      }
-    }
+    apiChirpAction(chirp.id, action.type, handleActionBackendEvent);
   };
   const display =
     action.type === "like" ? `${likes} ${actionDisplay}` : actionDisplay;
@@ -111,6 +110,19 @@ export const ActionBtn = (props) => {
   );
 };
 
+export const ParentChirp = (props) => {
+  const { chirp } = props;
+
+  return chirp.parent ? (
+    <div className="row">
+      <div className="col-11 mx-auto p-3 border rounded">
+        <p className="mb-0 text-muted small">Rechirp</p>
+        <Chirp className={" "} chirp={chirp.parent} />
+      </div>
+    </div>
+  ) : null;
+};
+
 export const Chirp = (props) => {
   const { chirp } = props;
   const className = props.className
@@ -118,9 +130,12 @@ export const Chirp = (props) => {
     : "col-10 mx-auto col-md-6";
   return (
     <div className={className}>
-      <p>
-        {chirp.id} - {chirp.content}
-      </p>
+      <div>
+        <p>
+          {chirp.id} - {chirp.content}
+        </p>
+        <ParentChirp chirp={chirp} />
+      </div>
       <div className="btn btn-group">
         <ActionBtn chirp={chirp} action={{ type: "like", display: "Likes" }} />
         <ActionBtn
