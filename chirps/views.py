@@ -95,6 +95,9 @@ def chirp_action_view(request, *args, **kwargs):
 @api_view(['GET'])
 def chirp_list_view(request, *args, **kwargs):
     qs = Chirp.objects.all()
+    username = request.GET.get('username')
+    if username != None:
+        qs = qs.filter(user__username__iexact=username)
     serializer = ChirpSerializer(qs, many=True)
     return Response(serializer.data)
 
