@@ -14,9 +14,9 @@ export const apiChirpDetail = (chirpId, callback) => {
 };
 
 export const apiChirpList = (username, callback) => {
-  let endpoint = "/chirps/"
+  let endpoint = "/chirps/";
   if (username) {
-    endpoint = `/chirps/?username=${username}`
+    endpoint = `/chirps/?username=${username}`;
   }
   backendLookup("GET", endpoint, callback);
 };
