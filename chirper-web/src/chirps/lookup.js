@@ -9,6 +9,14 @@ export const apiChirpAction = (chirpId, action, callback) => {
   backendLookup("POST", "/chirps/action/", callback, data);
 };
 
-export const apiChirpList = (callback) => {
-  backendLookup("GET", "/chirps/", callback);
+export const apiChirpDetail = (chirpId, callback) => {
+  backendLookup("GET", `/chirps/${chirpId}/`, callback);
+};
+
+export const apiChirpList = (username, callback) => {
+  let endpoint = "/chirps/"
+  if (username) {
+    endpoint = `/chirps/?username=${username}`
+  }
+  backendLookup("GET", endpoint, callback);
 };

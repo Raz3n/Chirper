@@ -4,7 +4,7 @@ import { apiChirpAction, apiChirpCreate, apiChirpList } from "./lookup";
 export const ChirpsComponent = (props) => {
   const textAreaRef = React.createRef();
   const [newChirps, setNewChirps] = useState([]);
-
+  const canChirp = props.canChirp === "false" ? false : true;
   const handleBackendUpdate = (response, status) => {
     // backend api response handler
     let tempNewChirps = [...newChirps];
@@ -26,20 +26,22 @@ export const ChirpsComponent = (props) => {
   };
   return (
     <div className={props.className}>
-      <div className="col-12 mb-3">
-        <form onSubmit={handleSubmit}>
-          <textarea
-            ref={textAreaRef}
-            required={true}
-            className="form-control"
-            name="chirp"
-          ></textarea>
-          <button type="submit" className="btn btn-primary my-3">
-            Chirp
-          </button>
-        </form>
-      </div>
-      <ChirpsList newChirps={newChirps} />
+      {canChirp === true && (
+        <div className="col-12 mb-3">
+          <form onSubmit={handleSubmit}>
+            <textarea
+              ref={textAreaRef}
+              required={true}
+              className="form-control"
+              name="chirp"
+            ></textarea>
+            <button type="submit" className="btn btn-primary my-3">
+              Chirp
+            </button>
+          </form>
+        </div>
+      )}
+      <ChirpsList newChirps={newChirps} {...props} />
     </div>
   );
 };
@@ -65,18 +67,18 @@ export const ChirpsList = (props) => {
           alert("There was an error");
         }
       };
-      apiChirpList(handleChirpListLookup);
+      apiChirpList(props.username, handleChirpListLookup);
     }
-  }, [chirpsInit, chirpsDidSet, setChirpsDidSet]);
+  }, [chirpsInit, chirpsDidSet, setChirpsDidSet, props.username]);
 
   const handleDidRechirp = (newChirp) => {
-    const updateChirpsInit = [...chirpsInit]
-    updateChirpsInit.unshift(newChirp)
-    setChirpsInit(updateChirpsInit)
-    const updateFinalChirps = [...chirps]
-    updateFinalChirps.unshift(chirps)
-    setChirps(updateFinalChirps)
-  }
+    const updateChirpsInit = [...chirpsInit];
+    updateChirpsInit.unshift(newChirp);
+    setChirpsInit(updateChirpsInit);
+    const updateFinalChirps = [...chirps];
+    updateFinalChirps.unshift(chirps);
+    setChirps(updateFinalChirps);
+  };
   return chirps.map((item, index) => {
     return (
       <Chirp
@@ -91,7 +93,7 @@ export const ChirpsList = (props) => {
 
 export const ActionBtn = (props) => {
   const { chirp, action, didPerformAction } = props;
-  const likes = chirp.likes ? chirp.likes : 0
+  const likes = chirp.likes ? chirp.likes : 0;
   const className = props.className
     ? props.className
     : "btn btn-primary btn-sm";
@@ -100,14 +102,15 @@ export const ActionBtn = (props) => {
   const handleActionBackendEvent = (response, status) => {
     console.log(response, status);
     if ((status === 200 || status === 201) && didPerformAction) {
-      didPerformAction(response, status)
+      didPerformAction(response, status);
     }
   };
   const handleClick = (event) => {
     event.preventDefault();
     apiChirpAction(chirp.id, action.type, handleActionBackendEvent);
   };
-  const display = action.type === "like" ? `${likes} ${actionDisplay}` : actionDisplay;
+  const display =
+    action.type === "like" ? `${likes} ${actionDisplay}` : actionDisplay;
   return (
     <button className={className} onClick={handleClick}>
       {display}
@@ -117,13 +120,14 @@ export const ActionBtn = (props) => {
 
 export const ParentChirp = (props) => {
   const { chirp } = props;
-  return chirp.parent ? 
+  return chirp.parent ? (
     <div className="row">
       <div className="col-11 mx-auto p-3 border rounded">
         <p className="mb-0 text-muted small">Rechirp</p>
         <Chirp hideActions className={" "} chirp={chirp.parent} />
       </div>
-    </div> : null;
+    </div>
+  ) : null;
 };
 
 export const Chirp = (props) => {
@@ -137,13 +141,13 @@ export const Chirp = (props) => {
 
   const handlePerformAction = (newActionChirp, status) => {
     if (status === 200) {
-      setActionChirp(newActionChirp)
+      setActionChirp(newActionChirp);
     } else if (status === 201) {
       if (didRechirp) {
-        didRechirp(newActionChirp)
+        didRechirp(newActionChirp);
       }
     }
-  }
+  };
 
   return (
     <div className={className}>
@@ -153,7 +157,7 @@ export const Chirp = (props) => {
         </p>
         <ParentChirp chirp={chirp} />
       </div>
-      {(actionChirp && hideActions !== SVGComponentTransferFunctionElement) &&
+      {actionChirp && hideActions !== SVGComponentTransferFunctionElement && (
         <div className="btn btn-group">
           <ActionBtn
             chirp={actionChirp}
@@ -171,7 +175,7 @@ export const Chirp = (props) => {
             action={{ type: "rechirp", display: "Rechirp" }}
           />
         </div>
-      }
+      )}
     </div>
   );
 };
