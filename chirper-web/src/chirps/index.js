@@ -1,5 +1,5 @@
 import {ActionBtn} from './buttons'
-import {ChirpsComponent} from './components'
+import {ChirpsComponent, ChirpDetailComponent} from './components'
 import {ChirpCreate} from './create'
 import {Chirp} from './detail'
 import {ChirpsList} from './list'
@@ -10,5 +10,6 @@ export {
     Chirp,
     ChirpCreate,
     ChirpsComponent,
+    ChirpDetailComponent,
     ChirpsList,
 }

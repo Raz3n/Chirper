@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ChirpCreate } from "./create";
+import { Chirp } from "./detail";
+import { apiChirpDetail } from "./lookup";
 import { ChirpsList } from "./list";
 
 export const ChirpsComponent = (props) => {
@@ -18,4 +20,25 @@ export const ChirpsComponent = (props) => {
       <ChirpsList newChirps={newChirps} {...props} />
     </div>
   );
+};
+
+export const ChirpDetailComponent = (props) => {
+  const { chirpId } = props;
+  const [didLookup, setDidLookup] = useState(false);
+  const [chirp, setChirp] = useState(null);
+  const handleBackendLookup = (response, status) => {
+    if (status === 200) {
+      setChirp(response);
+    } else {
+      alert("There was an error finding your chirp.");
+    }
+  };
+  useEffect(() => {
+    if (didLookup === false) {
+      apiChirpDetail(chirpId, handleBackendLookup);
+      setDidLookup(true);
+    }
+  }, [chirpId, didLookup, setDidLookup]);
+
+  return chirp === null ? null : <Chirp chirp={chirp} className={props.className} />;
 };
