@@ -6,17 +6,17 @@ from django.views.generic import TemplateView
 
 
 from chirps.views import (
-    chirp_list_view,
-    chirp_detail_view,
-    chirp_profile_view,
+    local_chirps_list_view,
+    local_chirps_detail_view,
+    local_chirps_profile_view,
 )
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', chirp_list_view),
-    path('<int:chirp_id>', chirp_detail_view),
-    path('profile/<str:username>', chirp_profile_view),
+    path('', local_chirps_list_view),
+    path('<int:chirp_id>', local_chirps_detail_view),
+    path('profile/<str:username>', local_chirps_profile_view),
     path('api/chirps/', include('chirps.urls')),
 ]
 

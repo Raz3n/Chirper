@@ -25,13 +25,13 @@ def home_view(request, *args, **kwargs):
         username = request.user.username
     return render(request, "pages/home.html", context={}, status=200)
 
-def chirps_list_view(request, *args, **kwargs):
+def local_chirps_list_view(request, *args, **kwargs):
     return render(request, "chirps/list.html")
 
-def chirps_detail_view(request, chirp_id, *args, **kwargs):
+def local_chirps_detail_view(request, chirp_id, *args, **kwargs):
     return render(request, "chirps/detail.html", context={"chirp_id": chirp_id} )
 
-def chirps_profile_view(request, username, *args, **kwargs):
+def local_chirps_profile_view(request, username, *args, **kwargs):
     return render(request, "chirps/profile.html", context={"profile_username": username} )
 
 @api_view(['POST']) #http method the client sends == post
