@@ -25,6 +25,15 @@ def home_view(request, *args, **kwargs):
         username = request.user.username
     return render(request, "pages/home.html", context={}, status=200)
 
+def chirps_list_view(request, *args, **kwargs):
+    return render(request, "chirps/list.html")
+
+def chirps_detail_view(request, chirp_id, *args, **kwargs):
+    return render(request, "chirps/detail.html", context={"chirp_id": chirp_id} )
+
+def chirps_profile_view(request, username, *args, **kwargs):
+    return render(request, "chirps/profile.html", context={"profile_username": username} )
+
 @api_view(['POST']) #http method the client sends == post
 # @authentication_classes([SessionAuthentication, MyCustomAuth])
 @permission_classes([IsAuthenticated])
@@ -100,50 +109,3 @@ def chirp_list_view(request, *args, **kwargs):
         qs = qs.filter(user__username__iexact=username)
     serializer = ChirpSerializer(qs, many=True)
     return Response(serializer.data)
-
-
-def chirp_create_view_pure_django(request, *args, **kwargs):
-    user = request.user
-    if not request.user.is_authenticated:
-        user = None
-        if request.is_ajax():
-            return JsonResponse({}, status=401)
-        return redirect(settings.LOGIN_URL)
-    form = ChirpForm(request.POST or None)
-    next_url = request.POST.get("next") or None
-    if form.is_valid():
-        obj = form.save(commit=False)
-        obj.user = user
-        obj.save()
-        if request.is_ajax():
-            return JsonResponse( obj.serialize(), status=201)
-        if next_url != None and is_safe_url(next_url, ALLOWED_HOSTS):
-            return redirect(next_url)
-        form = ChirpForm()
-    if form.errors:
-        if request.is_ajax():
-            return JsonResponse(form.errors, status=400)
-    return render(request, 'components/form.html', context={"form": form})
-
-
-def chirp_list_view_pure_django(request, *args, **kwargs):
-    qs = Chirp.objects.all()
-    chirps_list = [ x.serialize() for x in qs]
-    data = {
-        "isUser": False,
-        "response": chirps_list
-    }
-    return JsonResponse(data)
-
-def chirp_detail_view_pure_django(request, chirp_id, *args, **kwargs):
-    data = {
-        "id": chirp_id,
-    }
-    status = 200
-    try:
-        obj = Chirp.objects.get(id=chirp_id)
-        data['content'] = obj.content
-    except:
-        data['message'] = "Not found"
-        status = 404
-    return JsonResponse(data, status=status)
