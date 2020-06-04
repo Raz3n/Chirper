@@ -4,6 +4,12 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.views.generic import TemplateView
 
+from accounts.views import (
+    login_view,
+    logout_view,
+    register_view
+)
+
 
 from chirps.views import (
     chirps_list_view,
@@ -15,6 +21,9 @@ from chirps.views import (
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', chirps_list_view),
+    path('login/', login_view),
+    path('logout/', logout_view),
+    path('register/', register_view),
     path('<int:chirp_id>', chirps_detail_view),
     path('profile/<str:username>', chirps_profile_view),
     path('api/chirps/', include('chirps.api.urls')),
