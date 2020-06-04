@@ -32,7 +32,11 @@ def logout_view(request, *args, **kwargs):
 def register_view(request, *args, **kwargs):
     form = UserCreationForm(request.POST or None)
     if form.is_valid():
-        print(form.cleaned_data)
+        user = form.save(commit=True)
+        user.set_password(form.cleaned_data.get("password1"))
+        login(request, user)
+        return redirect("/")
+        
     context = {
         "form": form,
         "btn_label": "Register",
