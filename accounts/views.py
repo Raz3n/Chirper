@@ -10,16 +10,31 @@ def login_view(request, *args, **kwargs):
         user_ = form.get_user()
         login(request, user_)
         return redirect("/")
-    return render(request, "accounts/login.html", {"form": form})
+    context = {
+        "form": form,
+        "btn_label": "Login",
+        "title": "Login"
+    }
+    return render(request, "accounts/auth.html", context)
 
 def logout_view(request, *args, **kwargs):
     if request.method == "POST":
         logout(request)
         return redirect("/login")
-    return render(request, "accounts/logout.html")
+    context = {
+        "form": None,
+        "btn_label": "Logout?",
+        "title": "Logout"
+    }
+    return render(request, "accounts/auth.html", context)
 
-def registration_view(request, *args, **kwargs):
+def register_view(request, *args, **kwargs):
     form = UserCreationForm(request.POST or None)
     if form.is_valid():
         print(form.cleaned_data)
-    return render(request, "accounts/register.html", {"form": form})
+    context = {
+        "form": form,
+        "btn_label": "Register",
+        "title": "Register"
+    }
+    return render(request, "accounts/auth.html", context)
