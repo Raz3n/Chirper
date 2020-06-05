@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     #internal
     'accounts',
     'chirps',
+    'profiles',
 ]
 
 MIDDLEWARE = [

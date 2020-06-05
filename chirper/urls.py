@@ -14,7 +14,6 @@ from accounts.views import (
 from chirps.views import (
     chirps_list_view,
     chirps_detail_view,
-    chirps_profile_view,
 )
 
 
@@ -25,7 +24,7 @@ urlpatterns = [
     path('logout/', logout_view),
     path('register/', register_view),
     path('<int:chirp_id>', chirps_detail_view),
-    path('profile/<str:username>', chirps_profile_view),
+    re_path(r'profiles?/', include('profiles.urls')),
     path('api/chirps/', include('chirps.api.urls')),
 ]
 

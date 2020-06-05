@@ -19,6 +19,3 @@ def chirps_list_view(request, *args, **kwargs):
 
 def chirps_detail_view(request, chirp_id, *args, **kwargs):
     return render(request, "chirps/detail.html", context={"chirp_id": chirp_id} )
-
-def chirps_profile_view(request, username, *args, **kwargs):
-    return render(request, "chirps/profile.html", context={"profile_username": username} )
