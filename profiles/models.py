@@ -11,7 +11,6 @@ class Profile(models.Model):
     
     
 def user_did_save(sender, instance, created,*args, **kwargs):
-    Profile.objects.get_or_create(user=instance)
     if created:
         Profile.objects.get_or_create(user=instance)
     
