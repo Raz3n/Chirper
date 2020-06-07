@@ -4,6 +4,7 @@ from django.db.models.signals import post_save
 
 # Create your models here.
 User = settings.AUTH_USER_MODEL
+
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     location = models.CharField(max_length=220, blank=True, null=True)
