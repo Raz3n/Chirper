@@ -89,17 +89,11 @@ def chirp_action_view(request, *args, **kwargs):
 @permission_classes([IsAuthenticated])
 def chirp_feed_view(request, *args, **kwargs):
     user = request.user
-    profiles = user.following.all()
-    followed_user_id = []
-    if profiles.exists():
-        followed_user_id = [x.user.id for x in profiles]
-    followed_user_id.append(user.id)
-    qs = Chirp.objects.filter(user__id__in=followed_user_id).order_by("-timestamp")
+    qs = Chirp.objects.all().feed(user)
     serializer = ChirpSerializer(qs, many=True)
     return Response(serializer.data)
 
 @api_view(['GET'])
-
 def chirp_list_view(request, *args, **kwargs):
     qs = Chirp.objects.all()
     username = request.GET.get('username')
