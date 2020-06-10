@@ -12,7 +12,10 @@ class ChirpLike(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
 
 class ChirpQuerySet(models.QuerySet):
-     def feed(self, user):
+    def by_username(self, username):
+        return self.filter(user__username__iexact=username)
+        
+    def feed(self, user):
         profiles_exist = user.following.exists()
         followed_user_id = []
         if profiles_exist:
@@ -25,6 +28,9 @@ class ChirpQuerySet(models.QuerySet):
 class ChirpManager(models.Manager):
     def get_queryset(self, *args, **kwargs):
         return ChirpQuerySet(self.model, using=self._db)
+    
+    def feed(self, user):
+        return self.get_queryset().feed(user)
 
 class Chirp(models.Model):
     # id = models.AutoField(primary_key=True)

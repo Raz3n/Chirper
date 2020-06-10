@@ -55,7 +55,7 @@ def chirp_delete_view(request, chirp_id , *args, **kwargs):
 def chirp_action_view(request, *args, **kwargs):
     '''
         id is required.
-        Action options are : Like, Unlike, Re-Chirp
+        Action options: Like, Unlike, Re-Chirp
     '''
     serializer = ChirpActionSerializer(data=request.data)
     if serializer.is_valid(raise_exception=True):
@@ -89,7 +89,7 @@ def chirp_action_view(request, *args, **kwargs):
 @permission_classes([IsAuthenticated])
 def chirp_feed_view(request, *args, **kwargs):
     user = request.user
-    qs = Chirp.objects.all().feed(user)
+    qs = Chirp.objects.feed(user)
     serializer = ChirpSerializer(qs, many=True)
     return Response(serializer.data)
 
@@ -98,6 +98,6 @@ def chirp_list_view(request, *args, **kwargs):
     qs = Chirp.objects.all()
     username = request.GET.get('username')
     if username != None:
-        qs = qs.filter(user__username__iexact=username)
+        qs = qs.by_username(username)
     serializer = ChirpSerializer(qs, many=True)
     return Response(serializer.data)
