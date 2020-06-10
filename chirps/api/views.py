@@ -6,6 +6,7 @@ from django.utils.http import is_safe_url
 
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from ..models import Chirp
@@ -85,13 +86,19 @@ def chirp_action_view(request, *args, **kwargs):
             return Response(serializer.data, status=201)
     return Response({}, status=200)
 
+def get_paginated_queryset_response(qs, request):
+    paginator = PageNumberPagination()
+    paginator.page_size = 20
+    paginated_qs = paginator.paginate_queryset(qs, request)
+    serializer = ChirpSerializer(paginated_qs, many=True)
+    return paginator.get_paginated_response(serializer.data)
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def chirp_feed_view(request, *args, **kwargs):
     user = request.user
     qs = Chirp.objects.feed(user)
-    serializer = ChirpSerializer(qs, many=True)
-    return Response(serializer.data)
+    return get_paginated_queryset_response(qs, request)
 
 @api_view(['GET'])
 def chirp_list_view(request, *args, **kwargs):
@@ -99,5 +106,4 @@ def chirp_list_view(request, *args, **kwargs):
     username = request.GET.get('username')
     if username != None:
         qs = qs.by_username(username)
-    serializer = ChirpSerializer(qs, many=True)
-    return Response(serializer.data)
+    return get_paginated_queryset_response(qs, request)
