@@ -5,6 +5,7 @@ import {Chirp} from "./detail"
 export const ChirpsList = (props) => {
     const [chirpsInit, setChirpsInit] = useState([]);
     const [chirps, setChirps] = useState([]);
+    const [nextUrl, setNextUrl] = useState(null);
     const [chirpsDidSet, setChirpsDidSet] = useState(false);
     useEffect(() => {
       const final = [...props.newChirps].concat(chirpsInit);
@@ -17,7 +18,8 @@ export const ChirpsList = (props) => {
       if (chirpsDidSet === false) {
         const handleChirpListLookup = (response, status) => {
           if (status === 200) {
-            setChirpsInit(response);
+            setNextUrl(response.next)
+            setChirpsInit(response.results);
             setChirpsDidSet(true);
           } else {
             alert("There was an error");
@@ -35,7 +37,7 @@ export const ChirpsList = (props) => {
       updateFinalChirps.unshift(chirps);
       setChirps(updateFinalChirps);
     };
-    return chirps.map((item, index) => {
+    return <React.Fragment> {chirps.map((item, index) => {
       return (
         <Chirp
           chirp={item}
@@ -43,6 +45,7 @@ export const ChirpsList = (props) => {
           className="my-5 py-5 border bg-white text-dark"
           key={`${index}-{item.id}`}
         />
-      );
-    });
+    )})}
+    { nextUrl !== null && <button className='btn btn-outline-primary'>Load Next</button>}
+    </React.Fragment>
   };
