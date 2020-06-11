@@ -34,9 +34,6 @@ class ChirpCreateSerializer(serializers.ModelSerializer):
         if len(value) > MAX_CHIRP_LENGTH:
             raise serializers.ValidationError("This chirp is too long")
         return value
-    
-    # def get_user(self, obj):
-    #     return obj.user.id
 
 class ChirpSerializer(serializers.ModelSerializer):
     user = PublicProfileSerializer(source='user.profile', read_only=True)
