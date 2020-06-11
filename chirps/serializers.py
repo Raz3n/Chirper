@@ -1,5 +1,6 @@
 from django.conf import settings
 from rest_framework import serializers
+from profiles.serializers import PublicProfileSerializer
 from .models import Chirp
 
 
@@ -19,7 +20,7 @@ class ChirpActionSerializer(serializers.Serializer):
         return value
 
 class ChirpCreateSerializer(serializers.ModelSerializer):
-    user = serializers.SerializerMethodField(read_only=True)
+    user = PublicProfileSerializer(source='user.profile', read_only=True)
     likes = serializers.SerializerMethodField(read_only=True)
     
     class Meta:
@@ -34,11 +35,11 @@ class ChirpCreateSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("This chirp is too long")
         return value
     
-    def get_user(self, obj):
-        return obj.user.id
+    # def get_user(self, obj):
+    #     return obj.user.id
 
 class ChirpSerializer(serializers.ModelSerializer):
-    user = serializers.SerializerMethodField(read_only=True)
+    user = PublicProfileSerializer(source='user.profile', read_only=True)
     likes = serializers.SerializerMethodField(read_only=True)
     parent = ChirpCreateSerializer(read_only=True)
 
@@ -56,7 +57,4 @@ class ChirpSerializer(serializers.ModelSerializer):
     
     def get_likes(self, obj):
         return obj.likes.count()
-    
-    def get_user(self, obj):
-        return obj.user.id
       

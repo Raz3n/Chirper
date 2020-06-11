@@ -28,11 +28,8 @@ class PublicProfileSerializer(serializers.ModelSerializer):
     def get_username(self, obj):
         return obj.user.username
     
-    def get_first_name(self, obj):
-        return obj.user.first_name
-    
     def get_following_count(self, obj):
         return obj.user.following.count()
     
-    def get_followers_count(self, obj):
-        return obj.user.followers.count()
+    def get_follower_count(self, obj):
+        return obj.followers.count()
