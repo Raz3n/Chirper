@@ -19,11 +19,12 @@ class ChirpActionSerializer(serializers.Serializer):
         return value
 
 class ChirpCreateSerializer(serializers.ModelSerializer):
+    user = serializers.SerializerMethodField(read_only=True)
     likes = serializers.SerializerMethodField(read_only=True)
     
     class Meta:
         model = Chirp
-        fields = ['id','content','likes']
+        fields = ['user', 'id', 'content', 'likes', 'timestamp']
     
     def get_likes(self, obj):
         return obj.likes.count()
@@ -32,15 +33,30 @@ class ChirpCreateSerializer(serializers.ModelSerializer):
         if len(value) > MAX_CHIRP_LENGTH:
             raise serializers.ValidationError("This chirp is too long")
         return value
+    
+    def get_user(self, obj):
+        return obj.user.id
 
 class ChirpSerializer(serializers.ModelSerializer):
+    user = serializers.SerializerMethodField(read_only=True)
     likes = serializers.SerializerMethodField(read_only=True)
     parent = ChirpCreateSerializer(read_only=True)
 
     class Meta:
         model = Chirp
-        fields = ['id','content','likes', 'is_rechirp', 'parent']
+        fields = [
+            'user',
+            'id',
+            'content', 
+            'likes', 
+            'is_rechirp', 
+            'parent', 
+            'timestamp'
+        ]
     
     def get_likes(self, obj):
         return obj.likes.count()
+    
+    def get_user(self, obj):
+        return obj.user.id
       
