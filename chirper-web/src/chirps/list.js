@@ -37,6 +37,24 @@ export const ChirpsList = (props) => {
       updateFinalChirps.unshift(chirps);
       setChirps(updateFinalChirps);
     };
+    const handleLoadNext = (event) => {
+      event.preventDefault()
+      if (nextUrl !== null) {
+        const handleLoadNextResponse = (response, status) => {
+          if (status === 200) {
+            setNextUrl(response.next)
+            const newChirps = [...chirps].concat(response.results)
+            setChirpsInit(newChirps);
+            setChirps(newChirps);
+          } else {
+            alert("There was an error");
+          }
+        }
+        apiChirpList(props.username, handleLoadNextResponse, nextUrl)
+      }
+    }
+
+
     return <React.Fragment> {chirps.map((item, index) => {
       return (
         <Chirp
@@ -46,6 +64,6 @@ export const ChirpsList = (props) => {
           key={`${index}-{item.id}`}
         />
     )})}
-    { nextUrl !== null && <button className='btn btn-outline-primary'>Load Next</button>}
+    { nextUrl !== null && <button onClick={handleLoadNext} className='btn btn-outline-primary'>Load Next</button>}
     </React.Fragment>
   };

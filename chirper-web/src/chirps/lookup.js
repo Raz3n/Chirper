@@ -13,10 +13,13 @@ export const apiChirpDetail = (chirpId, callback) => {
   backendLookup("GET", `/chirps/${chirpId}/`, callback);
 };
 
-export const apiChirpList = (username, callback) => {
+export const apiChirpList = (username, callback, nextUrl) => {
   let endpoint = "/chirps/";
   if (username) {
     endpoint = `/chirps/?username=${username}`;
+  }
+  if (nextUrl !== null && nextUrl !== undefined) {
+    endpoint = nextUrl.replace("http://localhost:8000/api", "")
   }
   backendLookup("GET", endpoint, callback);
 };
