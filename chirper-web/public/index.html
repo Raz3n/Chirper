@@ -35,10 +35,10 @@
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
 
-    <div  class='d-none' id="chirper-feed" ></div>
-    <div  class='d-none'  id='chirper-container'></div>
+    <div class='d-none' id="chirper-feed" ></div>
+    <div class='d-none'  id='chirper-container'></div>
     <div class='chirper-profile-badge' data-username="nelly"></div>
-    <div class='d-none' id="chirper" data-username="nelly" data-can-tweet="false"></div>
+    <div class='d-none' id="chirper" data-username="nelly" data-can-chirp="false"></div>
     <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.
@@ -50,19 +50,16 @@
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
     <script>
-      var path = window.location.pathname;
-      var idRegex = /(?<chirpid>\d+)/;
-      var match = path.match(idRegex);
+      var path = window.location.pathname
+      var idRegex = /(?<chirpid>\d+)/
+      var match = path.match(idRegex)
       if (match) {
-        var chirpId = match.groups.chirpid;
-        var chirpEl = document.getElementById("chirper");
-        chirpEl.className = "d-none";
-        var chirpEl =
-          "<div class='chirper-detail' data-chirp-id=" +
-          chirpId +
-          " data-class-name='col-6 mx-auto'></div>";
-        var mainContainer = document.getElementById("chirp-container");
-        mainContainer.innerHTML = chirpEl;
+        var chirpId = match.groups.chirpid
+        var chirperEl = document.getElementById("chirper")
+        chirperEl.className = 'd-none'
+        var chirpEl = "<div class='chirper-detail' data-chirp-id=" + chirpId + " data-class-name='col-6 mx-auto'></div>"
+        var mainContainer = document.getElementById("chirp-container")
+        mainContainer.innerHTML = chirpEl
       }
     </script>
   </body>

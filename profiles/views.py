@@ -21,7 +21,7 @@ def profile_detail_view(request, username, *args, **kwargs):
     return render(request, "profiles/detail.html", context)
 
 def profile_update_view(request, *args, **kwargs):
-    if not request.user.is_authenticated: # is_authenticated()
+    if not request.user.is_authenticated:
         return redirect("/login?next=/profile/update")
     user = request.user
     user_data = {
