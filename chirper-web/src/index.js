@@ -29,12 +29,12 @@ chirpDetailElements.forEach(container=> {
     e(ChirpDetailComponent, container.dataset), container)
 })
 
-const userProfileBadgeElements = document.querySelectorAll(".chirper-2-profile-badge")
+const userProfileBadgeElements = document.querySelectorAll(".chirper-profile-badge")
 
 userProfileBadgeElements.forEach(container=> {
-    ReactDOM.render(
-        e(ProfileBadgeComponent, container.dataset), 
-        container);
+  ReactDOM.render(
+      e(ProfileBadgeComponent, container.dataset), 
+      container);
 })
 
 // If you want your app to work offline and load faster, you can change

@@ -1,17 +1,32 @@
 import React, {useEffect, useState} from 'react'
 
-import {apiProfileDetail} from './lookup'
+
+import {UserDisplay, UserPicture} from './components'
+import {apiProfileDetail, apiProfileFollowToggle} from './lookup'
 
 const ProfileBadge = (props) => {
-    const {user} = props
-    console.log(user)
-return user ? <span>{user.first_name}</span> : null
+    const {user, didFollowToggle, profileLoading} = props
+    let currentVerb = (user && user.is_following) ? "Unfollow" : "Follow"
+    currentVerb = profileLoading ? "Loading..." : currentVerb
+    const handleFollowToggle = (event) => {
+        event.preventDefault()
+        if (didFollowToggle && !profileLoading) {
+            didFollowToggle(currentVerb)
+        }
+    }
+    return user ? <div>
+        <UserPicture user={user} hideLink />
+        <p><UserDisplay user={user} includeFullName hideLink /></p>
+        <button className='btn btn-primary' onClick={handleFollowToggle}>{currentVerb}</button>
+    </div> : null
 }
 
 export const ProfileBadgeComponent =  (props) => {
     const {username} = props
+    // lookup
     const [didLookup, setDidLookup] = useState(false)
     const [profile, setProfile] = useState(null)
+    const [profileLoading, setProfileLoading] = useState(false)
     const handleBackendLookup = (response, status) => {
       if (status === 200) {
         setProfile(response)
@@ -23,5 +38,16 @@ export const ProfileBadgeComponent =  (props) => {
         setDidLookup(true)
       }
     }, [username, didLookup, setDidLookup])
-    return didLookup === false ? "Loading..." : profile ? <ProfileBadge user={profile} /> : null
+
+    const handleNewFollow = (actionVerb) => {
+        apiProfileFollowToggle(username, actionVerb, (response, status)=>{
+            if (status===200) {
+                setProfile(response)
+            }
+            setProfileLoading(false)
+        })
+        setProfileLoading(true)
+        
+    }
+    return didLookup === false ? "Loading..." : profile ? <ProfileBadge user={profile} didFollowToggle={handleNewFollow} profileLoading={profileLoading} /> : null
 }
