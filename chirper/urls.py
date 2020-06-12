@@ -12,14 +12,16 @@ from accounts.views import (
 
 
 from chirps.views import (
+    home_view,
     chirps_list_view,
     chirps_detail_view,
 )
 
 
 urlpatterns = [
+    path('', home_view),
     path('admin/', admin.site.urls),
-    path('', chirps_list_view),
+    path('global/', chirps_list_view),
     path('login/', login_view),
     path('logout/', logout_view),
     path('register/', register_view),
