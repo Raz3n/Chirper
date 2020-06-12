@@ -21,11 +21,9 @@ export const FeedList = (props) => {
             setNextUrl(response.next)
             setChirpsInit(response.results);
             setChirpsDidSet(true);
-          } else {
-            alert("There was an error");
           }
         };
-        apiChirpFeed(props.username, handleChirpListLookup);
+        apiChirpFeed(handleChirpListLookup);
       }
     }, [chirpsInit, chirpsDidSet, setChirpsDidSet, props.username]);
   
@@ -46,8 +44,6 @@ export const FeedList = (props) => {
             const newChirps = [...chirps].concat(response.results)
             setChirpsInit(newChirps);
             setChirps(newChirps);
-          } else {
-            alert("There was an error");
           }
         }
         apiChirpFeed(handleLoadNextResponse, nextUrl)
