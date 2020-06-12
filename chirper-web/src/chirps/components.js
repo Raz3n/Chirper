@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { ChirpCreate } from "./create";
 import { Chirp } from "./detail";
 import { apiChirpDetail } from "./lookup";
+import { FeedList } from "./feed";
 import { ChirpsList } from "./list";
 
 export const ChirpsComponent = (props) => {
@@ -41,4 +42,22 @@ export const ChirpDetailComponent = (props) => {
   }, [chirpId, didLookup, setDidLookup]);
 
   return chirp === null ? null : <Chirp chirp={chirp} className={props.className} />;
+};
+
+export const FeedComponent = (props) => {
+  const [newChirps, setNewChirps] = useState([]);
+  const canChirp = props.canChirp === "false" ? false : true;
+  const handleNewChirp = (newChirp) => {
+    let tempNewChirps = [...newChirps];
+    tempNewChirps.unshift(newChirp);
+    setNewChirps(tempNewChirps);
+  };
+  return (
+    <div className={props.className}>
+      {canChirp === true && (
+        <ChirpCreate didChirp={handleNewChirp} className="col-12 mb-3" />
+      )}
+      <FeedList newChirps={newChirps} {...props} />
+    </div>
+  );
 };

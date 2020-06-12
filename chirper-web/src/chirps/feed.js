@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import {apiChirpFeed } from "./lookup";
 import {Chirp} from "./detail"
 
-export const ChirpsList = (props) => {
+export const FeedList = (props) => {
     const [chirpsInit, setChirpsInit] = useState([]);
     const [chirps, setChirps] = useState([]);
     const [nextUrl, setNextUrl] = useState(null);
