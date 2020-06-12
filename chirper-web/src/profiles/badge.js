@@ -2,6 +2,12 @@ import React, {useEffect, useState} from 'react'
 
 import {apiProfileDetail} from './lookup'
 
+const ProfileBadge = (props) => {
+    const {user} = props
+    console.log(user)
+return user ? <span>{user.first_name}</span> : null
+}
+
 export const ProfileBadgeComponent =  (props) => {
     const {username} = props
     const [didLookup, setDidLookup] = useState(false)
@@ -17,5 +23,5 @@ export const ProfileBadgeComponent =  (props) => {
         setDidLookup(true)
       }
     }, [username, didLookup, setDidLookup])
-    return didLookup === false ? "Loading..." : profile ? <span>{profile.first_name}</span> : null
+    return didLookup === false ? "Loading..." : profile ? <ProfileBadge user={profile} /> : null
 }
