@@ -45,7 +45,6 @@ export const ProfileBadgeComponent = (props) => {
 
   const handleNewFollow = (actionVerb) => {
     apiProfileFollowToggle(username, actionVerb, (response, status) => {
-      // console.log(response, status)
       if (status === 200) {
         setProfile(response);
         // apiProfileDetail(username, handleBackendLookup)
