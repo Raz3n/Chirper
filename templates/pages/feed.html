@@ -3,9 +3,9 @@
 {% block content %}
 
 {% if request.user.is_authenticated %}
-  <div id="chirper-feed"></div>
+    <div id="chirper-feed"></div>
 {% else %}
-  <div id="chirper"></div>
+    <div id="chirper"></div>
 {% endif %}
 
 {% endblock content %}
