@@ -1,7 +1,13 @@
 import React, { useEffect, useState } from "react";
-
+import numeral from 'numeral'
 import { UserDisplay, UserPicture } from "./components";
 import { apiProfileDetail, apiProfileFollowToggle } from "./lookup";
+
+
+const DisplayCount = (props) => {
+  return <span className={props.className}>{numeral(props.children).format("0a")}</span>
+}
+
 
 const ProfileBadge = (props) => {
   const { user, didFollowToggle, profileLoading } = props;
@@ -16,11 +22,10 @@ const ProfileBadge = (props) => {
   return user ? (
     <div>
       <UserPicture user={user} hideLink />
-      <p>
-        <UserDisplay user={user} includeFullName hideLink />
-      </p>
-      <button className="btn btn-primary" onClick={handleFollowToggle}>
-        {currentVerb}
+      <p><UserDisplay user={user} includeFullName hideLink /></p>
+      <p>Followers: <DisplayCount>{user.follower_count}</DisplayCount></p>
+      <p>Following: <DisplayCount>{user.following_count}</DisplayCount></p>
+      <button className="btn btn-primary" onClick={handleFollowToggle}>{currentVerb}
       </button>
     </div>
   ) : null;

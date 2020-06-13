@@ -1,6 +1,6 @@
 import React from 'react'
 
-export function UserLink (props) {
+export const UserLink = (props) => {
   const {username} = props
   const handleUserLink = (event) => {
     window.location.href= `/profiles/${username}`
@@ -10,7 +10,7 @@ export function UserLink (props) {
   </span>
 }
 
-export  function UserDisplay(props){
+export const UserDisplay = (props) => {
   const {user, includeFullName, hideLink} = props
   const nameDisplay = includeFullName === true ? `${user.first_name} ${user.last_name} ` : null
   return <React.Fragment>
@@ -19,7 +19,7 @@ export  function UserDisplay(props){
   </React.Fragment>
 }
 
-export  function UserPicture (props) {
+export const UserPicture = (props) => {
   const {user, hideLink} = props
   const userIdSpan = <span className='mx-1 px-3 py-2 rounded-circle bg-dark text-white'>
   {user.username[0]}
